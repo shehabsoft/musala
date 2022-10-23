@@ -1,0 +1,164 @@
+<div>
+  <h2 id="page-heading" data-cy="DroneHeading">
+    <span>Drones</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-drone"
+        [routerLink]="['/drone/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Drone </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="drones?.length === 0">
+    <span>No Drones found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="drones && drones.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span>ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="serialNumber">
+            <div class="d-flex">
+              <span>Serial Number</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="model">
+            <div class="d-flex">
+              <span>Model</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="weightLimit">
+            <div class="d-flex">
+              <span>Weight Limit</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="batteryCapacity">
+            <div class="d-flex">
+              <span>Battery Capacity</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="state">
+            <div class="d-flex">
+              <span>State</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createdBy">
+            <div class="d-flex">
+              <span>Created By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createdDate">
+            <div class="d-flex">
+              <span>Created Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedBy">
+            <div class="d-flex">
+              <span>Last Modified By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedDate">
+            <div class="d-flex">
+              <span>Last Modified Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let drone of drones; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/drone', drone.id, 'view']">{{ drone.id }}</a>
+          </td>
+          <td>{{ drone.serialNumber }}</td>
+          <td>{{ drone.model }}</td>
+          <td>{{ drone.weightLimit }}</td>
+          <td>{{ drone.batteryCapacity }}</td>
+          <td>{{ drone.state }}</td>
+          <td>{{ drone.createdBy }}</td>
+          <td>{{ drone.createdDate | formatMediumDatetime }}</td>
+          <td>{{ drone.lastModifiedBy }}</td>
+          <td>{{ drone.lastModifiedDate | formatMediumDatetime }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/medication']"
+                [queryParams]="{ 'filter[droneId.in]': drone.id }"
+                class="btn btn-info btn-sm"
+                data-cy="filterOtherEntityButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Show Medication</span>
+              </button>
+              <button type="submit" [routerLink]="['/drone', drone.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/drone', drone.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(drone)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="drones && drones.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

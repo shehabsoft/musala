@@ -1,0 +1,28 @@
+/**
+* SysDomain (sys_domain) entity.
+* @author Shehab Tarek.
+*/
+entity Audit {
+    message String required,
+    createdBy String required,
+    createdDate Instant required,
+    lastModifiedBy String ,
+    lastModifiedDate Instant 
+}
+ 
+  
+
+// Set pagination options
+paginate Audit with pagination
+ 
+
+// Use Data Transfert Objects (DTO)
+dto * with mapstruct
+
+// Set service options 
+service all with serviceImpl
+
+microservice * with musala
+filter all
+clientRootFolder Drone with musala
+ 

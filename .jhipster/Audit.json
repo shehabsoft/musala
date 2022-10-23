@@ -1,0 +1,40 @@
+{
+  "applications": "*",
+  "changelogDate": "20221022144105",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "audit",
+  "fields": [
+    {
+      "fieldName": "message",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "microserviceName": "musala",
+  "name": "Audit",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceImpl"
+}

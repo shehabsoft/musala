@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="drone">
+      <h2 data-cy="droneDetailsHeading"><span>Drone</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ drone.id }}</span>
+        </dd>
+        <dt><span>Serial Number</span></dt>
+        <dd>
+          <span>{{ drone.serialNumber }}</span>
+        </dd>
+        <dt><span>Model</span></dt>
+        <dd>
+          <span>{{ drone.model }}</span>
+        </dd>
+        <dt><span>Weight Limit</span></dt>
+        <dd>
+          <span>{{ drone.weightLimit }}</span>
+        </dd>
+        <dt><span>Battery Capacity</span></dt>
+        <dd>
+          <span>{{ drone.batteryCapacity }}</span>
+        </dd>
+        <dt><span>State</span></dt>
+        <dd>
+          <span>{{ drone.state }}</span>
+        </dd>
+        <dt><span>Created By</span></dt>
+        <dd>
+          <span>{{ drone.createdBy }}</span>
+        </dd>
+        <dt><span>Created Date</span></dt>
+        <dd>
+          <span>{{ drone.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Last Modified By</span></dt>
+        <dd>
+          <span>{{ drone.lastModifiedBy }}</span>
+        </dd>
+        <dt><span>Last Modified Date</span></dt>
+        <dd>
+          <span>{{ drone.lastModifiedDate | formatMediumDatetime }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/drone', drone.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

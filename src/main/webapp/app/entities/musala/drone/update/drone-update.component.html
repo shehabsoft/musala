@@ -1,0 +1,162 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-drone-heading" data-cy="DroneCreateUpdateHeading">Create or edit a Drone</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_serialNumber">Serial Number</label>
+          <input
+            type="text"
+            class="form-control"
+            name="serialNumber"
+            id="field_serialNumber"
+            data-cy="serialNumber"
+            formControlName="serialNumber"
+          />
+          <div
+            *ngIf="editForm.get('serialNumber')!.invalid && (editForm.get('serialNumber')!.dirty || editForm.get('serialNumber')!.touched)"
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('serialNumber')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_model">Model</label>
+          <select class="form-control" name="model" formControlName="model" id="field_model" data-cy="model">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let model of modelValues" [value]="model">model</option>
+          </select>
+          <div *ngIf="editForm.get('model')!.invalid && (editForm.get('model')!.dirty || editForm.get('model')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('model')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_weightLimit">Weight Limit</label>
+          <input
+            type="text"
+            class="form-control"
+            name="weightLimit"
+            id="field_weightLimit"
+            data-cy="weightLimit"
+            formControlName="weightLimit"
+          />
+          <div *ngIf="editForm.get('weightLimit')!.invalid && (editForm.get('weightLimit')!.dirty || editForm.get('weightLimit')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('weightLimit')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_batteryCapacity">Battery Capacity</label>
+          <input
+            type="text"
+            class="form-control"
+            name="batteryCapacity"
+            id="field_batteryCapacity"
+            data-cy="batteryCapacity"
+            formControlName="batteryCapacity"
+          />
+          <div
+            *ngIf="
+              editForm.get('batteryCapacity')!.invalid &&
+              (editForm.get('batteryCapacity')!.dirty || editForm.get('batteryCapacity')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('batteryCapacity')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_state">State</label>
+          <select class="form-control" name="state" formControlName="state" id="field_state" data-cy="state">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let state of stateValues" [value]="state">state</option>
+          </select>
+          <div *ngIf="editForm.get('state')!.invalid && (editForm.get('state')!.dirty || editForm.get('state')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('state')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_createdBy">Created By</label>
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          <div *ngIf="editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('createdBy')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('createdDate')!.invalid && (editForm.get('createdDate')!.dirty || editForm.get('createdDate')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('createdDate')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('createdDate')?.errors?.datetimelocal">
+              This field should be a date and time.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_lastModifiedBy">Last Modified By</label>
+          <input
+            type="text"
+            class="form-control"
+            name="lastModifiedBy"
+            id="field_lastModifiedBy"
+            data-cy="lastModifiedBy"
+            formControlName="lastModifiedBy"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_lastModifiedDate">Last Modified Date</label>
+          <div class="d-flex">
+            <input
+              id="field_lastModifiedDate"
+              data-cy="lastModifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="lastModifiedDate"
+              formControlName="lastModifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

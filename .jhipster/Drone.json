@@ -1,0 +1,71 @@
+{
+  "applications": "*",
+  "changelogDate": "20221016152140",
+  "clientRootFolder": "musala",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "drone",
+  "fields": [
+    {
+      "fieldName": "serialNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "model",
+      "fieldType": "Model",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "Lightweight,Middleweight,Cruiserweight,Heavyweight"
+    },
+    {
+      "fieldName": "weightLimit",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "batteryCapacity",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "state",
+      "fieldType": "State",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "IDLE,LOADING,LOADED,DELIVERING,DELIVERED,RETURNING"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "fluentMethods": true,
+  "javadoc": "SysDomain (sys_domain) entity.\\n@author Shehab Tarek.",
+  "jpaMetamodelFiltering": true,
+  "microserviceName": "musala",
+  "name": "Drone",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "medication",
+      "otherEntityRelationshipName": "drone",
+      "relationshipName": "droneMedications",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "serviceImpl"
+}

@@ -1,0 +1,171 @@
+<div>
+  <h2 id="page-heading" data-cy="MedicationHeading">
+    <span>Medications</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-medication"
+        [routerLink]="['/medication/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Medication </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="medications?.length === 0">
+    <span>No Medications found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="medications && medications.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span>ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <div class="d-flex">
+              <span>Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="weight">
+            <div class="d-flex">
+              <span>Weight</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="code">
+            <div class="d-flex">
+              <span>Code</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="image">
+            <div class="d-flex">
+              <span>Image</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createdBy">
+            <div class="d-flex">
+              <span>Created By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createdDate">
+            <div class="d-flex">
+              <span>Created Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedBy">
+            <div class="d-flex">
+              <span>Last Modified By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedDate">
+            <div class="d-flex">
+              <span>Last Modified Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="drone.id">
+            <div class="d-flex">
+              <span>Drone</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let medication of medications; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/medication', medication.id, 'view']">{{ medication.id }}</a>
+          </td>
+          <td>{{ medication.name }}</td>
+          <td>{{ medication.weight }}</td>
+          <td>{{ medication.code }}</td>
+          <td>
+            <a *ngIf="medication.image" (click)="openFile(medication.image, medication.imageContentType)">Open</a>
+            <span *ngIf="medication.image">{{ medication.imageContentType }}, {{ byteSize(medication.image) }}</span>
+          </td>
+          <td>{{ medication.createdBy }}</td>
+          <td>{{ medication.createdDate | formatMediumDatetime }}</td>
+          <td>{{ medication.lastModifiedBy }}</td>
+          <td>{{ medication.lastModifiedDate | formatMediumDatetime }}</td>
+          <td>
+            <div *ngIf="medication.drone">
+              <a [routerLink]="['/drone', medication.drone.id, 'view']">{{ medication.drone.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/medication', medication.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/medication', medication.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(medication)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="medications && medications.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

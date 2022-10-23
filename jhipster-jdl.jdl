@@ -1,0 +1,78 @@
+/**
+* SysDomain (sys_domain) entity.
+* @author Shehab Tarek.
+*/
+entity Drone {
+    serialNumber String required unique,
+    model Model required,
+    weightLimit String required,
+    batteryCapacity String required,
+    state State required,
+    createdBy String required,
+    createdDate Instant required,
+    lastModifiedBy String ,
+    lastModifiedDate Instant 
+}
+enum Model
+{
+Lightweight,
+Middleweight,
+Cruiserweight,
+Heavyweight
+
+}
+enum State
+{
+IDLE,
+LOADING,
+LOADED,
+DELIVERING,
+DELIVERED,
+RETURNING
+
+
+
+}
+
+ 
+entity Medication {              
+    name  String required unique,
+    weight Long required,
+    code  String required unique,
+    image   Blob,
+    createdBy String required,
+    createdDate Instant required,
+    lastModifiedBy String ,
+    lastModifiedDate Instant 
+}
+
+entity Audit {
+    message String required,
+    createdBy String required,
+    createdDate Instant required,
+    lastModifiedBy String ,
+    lastModifiedDate Instant 
+}
+
+
+// defining multiple OneToMany relationships with comments
+relationship  OneToMany { 
+    Drone{DroneMedications} to Medication
+}
+
+
+// Set pagination options
+paginate Drone with pagination
+paginate Medication with pagination
+paginate Audit with pagination
+
+// Use Data Transfert Objects (DTO)
+dto * with mapstruct
+
+// Set service options 
+service all with serviceImpl
+
+microservice * with musala
+filter all
+clientRootFolder Drone with musala
+clientRootFolder Medication with musala
